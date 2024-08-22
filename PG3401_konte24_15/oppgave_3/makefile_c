@@ -1,0 +1,30 @@
+# Makefile for client
+
+.PHONY: all clean
+
+all: client
+
+INCLDIR = ./include
+CC = gcc
+CFLAGS = -O2
+CFLAGS += -I$(INCLDIR)
+OBJDIR = obj
+
+_DEPS = 
+DEPS = $(patsubst %,$(INCLDIR)/%,$(_DEPS))
+
+_OBJS = client.o
+OBJS = $(patsubst %,$(OBJDIR)/%,$(_OBJS))
+
+# Rule to create obj directory
+$(OBJDIR):
+	mkdir -p $(OBJDIR)
+
+$(OBJDIR)/%.o: %.c $(DEPS) | $(OBJDIR)
+	$(CC) -c -o $@ $< $(CFLAGS)
+
+client: $(OBJS)
+	$(CC) -o $@ $^ $(CFLAGS)
+
+clean:
+	rm -rf $(OBJDIR) *~ core $(INCLDIR)/*~ client
